@@ -8,37 +8,41 @@ function App() {
   const [phoneNumber, setPhoneNumber] = useState()
   const [school, setSchool] = useState()
   const [study, setStudy] = useState()
+  const [applicationLetter, setApplicationLetter] = useState()
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const data = {
-      firstname: firstname,
-      lastname: lastname,
-      email: email,
-      phoneNumber: phoneNumber,
-      school: school,
-      study: study,
-    }
+    console.log(applicationLetter)
 
-    const fetchAPI = async (data) => {
-      const request = await fetch(`http://localhost:3100/sendData`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: JSON.stringify(data)
-      })
+    // const data = {
+    //   firstname: firstname,
+    //   lastname: lastname,
+    //   email: email,
+    //   phoneNumber: phoneNumber,
+    //   school: school,
+    //   study: study,
+    //   applicationLetter: applicationLetter,
+    // }
 
-      const promise = await request.json()
+    // const fetchAPI = async (data) => {
+    //   const request = await fetch(`http://localhost:3100/upload`, {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //       // 'Content-Type': 'application/x-www-form-urlencoded',
+    //     },
+    //     body: JSON.stringify(data)
+    //   })
 
-      return promise
-    } 
+    //   const promise = await request.json()
 
-    fetchAPI(data).then(res => {
-      console.log(res.name)
-    })
+    //   return promise
+    // } 
+
+    // fetchAPI(data).then(res => {
+    //   console.log(res.name)
+    // })
   }  
 
   return (
@@ -57,6 +61,8 @@ function App() {
         <input type="text" placeholder='Skole' onChange={e => setSchool(e.target.value)}></input>
         <label>Linje:</label>
         <input type="text" placeholder='Linje' onChange={e => setStudy(e.target.value)}></input>
+        <label>Søknad(pdf):</label>
+        <input type="file" onChange={e => setApplicationLetter(e)} />
         <input type="submit" onClick={e => handleSubmit(e)}></input>
       </form>
     </div>

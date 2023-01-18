@@ -13,8 +13,17 @@ function App() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    console.log(applicationLetter)
+    const formData = new FormData()
 
+    formData.append("firstame", firstname)
+    formData.append("lastname", lastname)
+    formData.append("email", email)
+    formData.append("phoneNumber", phoneNumber)
+    formData.append("school", school)
+    formData.append("study", study)
+    formData.append("applicationletter", applicationLetter)
+    
+    console.log(formData)
     // const data = {
     //   firstname: firstname,
     //   lastname: lastname,
@@ -22,27 +31,27 @@ function App() {
     //   phoneNumber: phoneNumber,
     //   school: school,
     //   study: study,
-    //   applicationLetter: applicationLetter,
     // }
 
-    // const fetchAPI = async (data) => {
-    //   const request = await fetch(`http://localhost:3100/upload`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //       // 'Content-Type': 'application/x-www-form-urlencoded',
-    //     },
-    //     body: JSON.stringify(data)
-    //   })
+    const fetchAPI = async (data) => {
+      const request = await fetch(`http://localhost:3100/upload`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data'
+          // 'Content-Type': 'application/json'
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: JSON.stringify(data)
+      })
 
-    //   const promise = await request.json()
+      const promise = await request.json()
 
-    //   return promise
-    // } 
+      return promise
+    } 
 
-    // fetchAPI(data).then(res => {
-    //   console.log(res.name)
-    // })
+    fetchAPI(data).then(res => {
+      console.log(res.name)
+    })
   }  
 
   return (

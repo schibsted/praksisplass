@@ -16,7 +16,7 @@ label {
    text-align: center;
    font-weight: 500;
 }
-input[type=text],input[type=email], select, textarea {
+input:not([type=submit], [type=file]), select, textarea {
    width: 100%;
    padding: 12px;
    border: 1px solid #ccc;

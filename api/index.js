@@ -45,8 +45,24 @@ app.post('/sendData', (req, res) => {
             console.log("1 record inserted");
         });
     });
+})
 
-    
+app.get('/api/applications', (req, res) => {
+    con.connect(function(err) {
+        con.query("SELECT id, firstname, lastname, email FROM applications", function (err, result) {
+            if (err) throw err;
+            res.send(result)
+        });
+    });
+})
+
+app.get('/api/applications/:id', (req, res) => {
+    con.connect(function(err) {
+        con.query("SELECT * FROM applications WHERE id = ?", [req.params.id], function (err, result) {
+            if (err) throw err;
+            res.send(result)
+        });
+    });
 })
 
 app.post('/uploadFile', (req, res) => {

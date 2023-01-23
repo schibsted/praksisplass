@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import ApplicationList from './ApplicationList';
+import Navigation from './Navigation';
 
 export default function Layout( props ) {
   const [applicants, setApplicants] = useState([]);
@@ -12,12 +12,9 @@ export default function Layout( props ) {
       .then(applicants => setApplicants(applicants));
   }, []);
 
-  console.log(props);
-
   return (
     <div>
-        <div id="Nav" />
-        <ApplicationList applicants={applicants}/>
+        <Navigation applicants={applicants}/>
         <Outlet />
     </div>
   );

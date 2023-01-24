@@ -142,6 +142,12 @@ app.get('get-counties', (req, res) => {
     })
 })
 
+app.get('/get-subject-areas', (req, res) => {
+    database("SELECT * FROM SubjectArea", [], function(result){
+        res.send(result)
+    })
+})
+
 const database = (sql, values, callback) => {
     con.connect(function(err) {
         con.query(sql, values, function (err, result) {

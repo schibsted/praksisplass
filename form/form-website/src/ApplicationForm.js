@@ -9,11 +9,12 @@ const ApplicationForm = ({props}) => {
     const [phoneNumber, setPhoneNumber] = useState()
     const [county, setCounty] = useState()
     const [school, setSchool] = useState()
-    const [study, setStudy] = useState()
+    const [subject, setSubject] = useState()
     const [applicationLetter, setApplicationLetter] = useState()
 
     const [counties, setCounties] = useState()
-    const [schools, setSchools] = useState([])
+    const [schools, setSchools] = useState()
+    const [subjects, setSubjects] = useState()
 
     const navigate = useNavigate()
 
@@ -32,10 +33,20 @@ const ApplicationForm = ({props}) => {
             const request = await fetch(`https://data-nsr.udir.no/v3/enheter/skolekategori/2`)
             const result = await request.json()
             setSchools(result)
-            console.log(result)
         }
 
         fetchSchools()
+    }, [])
+
+    useEffect(() => {
+        const fetchSubjects = async () => {
+            const request = await fetch('http://localhost:3100/get-subject-areas')
+            const result = await request.json()
+            console.log(result)
+            setSubjects(result)
+        }
+
+        fetchSubjects()
     }, [])
 
     const handleSubmit = (e) => {
@@ -48,7 +59,7 @@ const ApplicationForm = ({props}) => {
         formData.append("email", email)
         formData.append("phoneNumber", phoneNumber)
         formData.append("school", school)
-        formData.append("study", study)
+        formData.append("subject", subject)
         
         if (applicationLetter){
             for(let i =0; i < applicationLetter.length; i++) {
@@ -105,15 +116,22 @@ const ApplicationForm = ({props}) => {
                     <label>Skole:</label>
                     <select onChange={e => setSchool(e.target.options[e.target.selectedIndex].id)}>
                         <option>Velg skole</option>
-                        {schools?.filter(school => school.Fylkesnr === county).map( school => (
-                            <option key={school.Orgnr} id={school.Orgnr}>{school.Navn}</option>
-                        ))}
+                        {subjects?.map(subject => {
+                            if (subject.name == 'Uoppgitt') return
+                            return <option key={subject.id} id={subject.name}>{subject.name}</option>
+                        })}
                     </select>
                     </>
                 )}
                 
-                <label>Linje:</label>
-                <input type="text" placeholder="Linje" onChange={e => setStudy(e.target.value)} />
+                <label>Fagområde:</label>
+                <select onChange={e => setSubject(e.target.options[e.target.selectedIndex].id)}>
+                    <option>Velt fagområde</option>
+                    {counties?.map(county => {
+                        if (county.name == 'Uoppgitt') return
+                        return <option key={county.code} id={county.code}>{county.name}</option>
+                    })}
+                </select>
                 <label>Filer(pdf):</label>
                 <input type="file"  multiple accept="application/pdf" onChange={e => setApplicationLetter(e.target.files)} />
                 <input type="submit" onClick={e => handleSubmit(e)} />

@@ -15,6 +15,15 @@ CREATE SCHEMA IF NOT EXISTS `application-database` DEFAULT CHARACTER SET utf8 ;
 USE `application-database` ;
 
 -- -----------------------------------------------------
+-- Table `application-database`.`Files`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `application-database`.`Files` (
+  `filename` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`filename`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `application-database`.`Schools`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`Schools` (
@@ -24,33 +33,11 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `application-database`.`study`
+-- Table `application-database`.`Study`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`study` (
+CREATE TABLE IF NOT EXISTS `application-database`.`Study` (
   `study` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`study`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `application-database`.`Schools_has_study`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`Schools_has_study` (
-  `Schools_name` VARCHAR(45) NOT NULL,
-  `study_study` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`Schools_name`, `study_study`),
-  INDEX `fk_Schools_has_study_study1_idx` (`study_study` ASC),
-  INDEX `fk_Schools_has_study_Schools_idx` (`Schools_name` ASC),
-  CONSTRAINT `fk_Schools_has_study_Schools`
-    FOREIGN KEY (`Schools_name`)
-    REFERENCES `application-database`.`Schools` (`name`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Schools_has_study_study1`
-    FOREIGN KEY (`study_study`)
-    REFERENCES `application-database`.`study` (`study`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -63,13 +50,26 @@ CREATE TABLE IF NOT EXISTS `application-database`.`Applications` (
   `lastname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `phoneNumber` VARCHAR(45) NULL,
-  `Schools_has_study_Schools_name` VARCHAR(45) NOT NULL,
-  `Schools_has_study_study_study` VARCHAR(45) NOT NULL,
+  `school` VARCHAR(45) NOT NULL,
+  `study` VARCHAR(45) NOT NULL,
+  `filename` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Applications_Schools_has_study1_idx` (`Schools_has_study_Schools_name` ASC, `Schools_has_study_study_study` ASC),
-  CONSTRAINT `fk_Applications_Schools_has_study1`
-    FOREIGN KEY (`Schools_has_study_Schools_name` , `Schools_has_study_study_study`)
-    REFERENCES `application-database`.`Schools_has_study` (`Schools_name` , `study_study`)
+  INDEX `fk_Applications_files1_idx` (`filename` ASC),
+  INDEX `fk_Applications_Schools1_idx` (`school` ASC),
+  INDEX `fk_Applications_study1_idx` (`study` ASC),
+  CONSTRAINT `fk_Applications_files1`
+    FOREIGN KEY (`filename`)
+    REFERENCES `application-database`.`Files` (`filename`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Applications_Schools1`
+    FOREIGN KEY (`school`)
+    REFERENCES `application-database`.`Schools` (`name`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Applications_study1`
+    FOREIGN KEY (`study`)
+    REFERENCES `application-database`.`Study` (`study`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

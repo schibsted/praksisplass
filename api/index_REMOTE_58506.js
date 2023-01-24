@@ -40,41 +40,6 @@ app.get('/', (req, res) => {
     }))
 })
 
-app.post('/sendData', (req, res) => {
-    console.log(req.body)
-    let data = req.body
-    con.connect(function(err) {
-        var sql = "INSERT INTO applications (firstname, lastname, email, phoneNumber, school, study) VALUES ?";
-        var values = [[data.firstname, data.lastname, data.email, data.phoneNumber, data.school, data.study]]
-        con.query(sql, [values], function (err, result) {
-            if (err) throw err;
-            console.log("1 record inserted");
-        });
-    });
-})
-
-app.get('/api/applications', (req, res) => {
-    con.connect(function(err) {
-        con.query("SELECT id, firstname, lastname, email FROM applications", function (err, result) {
-            if (err) throw err;
-            res.send(result)
-        });
-    });
-})
-
-app.get('/api/applications/:id', (req, res) => {
-    con.connect(function(err) {
-        con.query("SELECT * FROM applications WHERE id = ?", [req.params.id], function (err, result) {
-            if (err) throw err;
-            res.send(result)
-        });
-    });
-})
-
-app.post('/uploadFile', (req, res) => {
-    console.log(req.body)
-})
-
 app.get('/listBucketData', async (req, res) => {
     const client = new S3Client({
         region: 'eu-north-1',

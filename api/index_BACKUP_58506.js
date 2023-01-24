@@ -40,6 +40,7 @@ app.get('/', (req, res) => {
     }))
 })
 
+<<<<<<< HEAD
 app.post('/sendData', (req, res) => {
     console.log(req.body)
     let data = req.body
@@ -75,7 +76,12 @@ app.post('/uploadFile', (req, res) => {
     console.log(req.body)
 })
 
+app.post('/upload', async function (req, res) {
+    const file = req.body.applicationLetter
+    
+=======
 app.get('/listBucketData', async (req, res) => {
+>>>>>>> upload-files
     const client = new S3Client({
         region: 'eu-north-1',
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,

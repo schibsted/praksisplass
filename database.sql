@@ -15,61 +15,102 @@ CREATE SCHEMA IF NOT EXISTS `application-database` DEFAULT CHARACTER SET utf8 ;
 USE `application-database` ;
 
 -- -----------------------------------------------------
--- Table `application-database`.`Files`
+-- Table `application-database`.`ContactPerson`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`Files` (
-  `filename` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`filename`))
+CREATE TABLE IF NOT EXISTS `application-database`.`ContactPerson` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `fistname` VARCHAR(45) NOT NULL,
+  `lastname` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NOT NULL,
+  `tel` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `application-database`.`Schools`
+-- Table `application-database`.`County`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`Schools` (
+CREATE TABLE IF NOT EXISTS `application-database`.`County` (
+  `countyNumber` CHAR(2) NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`countyNumber`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `application-database`.`School`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `application-database`.`School` (
+  `orgnr` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`name`))
+  `County_countyNumber` CHAR(2) NOT NULL,
+  PRIMARY KEY (`orgnr`),
+  INDEX `fk_School_County1_idx` (`County_countyNumber` ASC),
+  CONSTRAINT `fk_School_County1`
+    FOREIGN KEY (`County_countyNumber`)
+    REFERENCES `application-database`.`County` (`countyNumber`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `application-database`.`Study`
+-- Table `application-database`.`SubjectArea`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`Study` (
-  `study` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`study`))
+CREATE TABLE IF NOT EXISTS `application-database`.`SubjectArea` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `subject` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `application-database`.`Applications`
+-- Table `application-database`.`Application`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`Applications` (
+CREATE TABLE IF NOT EXISTS `application-database`.`Application` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `firstname` VARCHAR(45) NOT NULL,
   `lastname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
-  `phoneNumber` VARCHAR(45) NULL,
-  `school` VARCHAR(45) NOT NULL,
-  `study` VARCHAR(45) NOT NULL,
-  `filename` VARCHAR(45) NOT NULL,
+  `tel` VARCHAR(45) NULL,
+  `ContactPerson_id` INT NULL,
+  `School_orgnr` INT NOT NULL,
+  `SubjectArea_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  INDEX `fk_Applications_files1_idx` (`filename` ASC),
-  INDEX `fk_Applications_Schools1_idx` (`school` ASC),
-  INDEX `fk_Applications_study1_idx` (`study` ASC),
-  CONSTRAINT `fk_Applications_files1`
-    FOREIGN KEY (`filename`)
-    REFERENCES `application-database`.`Files` (`filename`)
+  INDEX `fk_Application_ContactPerson1_idx` (`ContactPerson_id` ASC),
+  INDEX `fk_Application_School1_idx` (`School_orgnr` ASC),
+  INDEX `fk_Application_SubjectArea1_idx` (`SubjectArea_id` ASC),
+  CONSTRAINT `fk_Application_ContactPerson1`
+    FOREIGN KEY (`ContactPerson_id`)
+    REFERENCES `application-database`.`ContactPerson` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Applications_Schools1`
-    FOREIGN KEY (`school`)
-    REFERENCES `application-database`.`Schools` (`name`)
+  CONSTRAINT `fk_Application_School1`
+    FOREIGN KEY (`School_orgnr`)
+    REFERENCES `application-database`.`School` (`orgnr`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Applications_study1`
-    FOREIGN KEY (`study`)
-    REFERENCES `application-database`.`Study` (`study`)
+  CONSTRAINT `fk_Application_SubjectArea1`
+    FOREIGN KEY (`SubjectArea_id`)
+    REFERENCES `application-database`.`SubjectArea` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `application-database`.`File`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `application-database`.`File` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `filename` VARCHAR(45) NOT NULL,
+  `fileKey` VARCHAR(45) NOT NULL,
+  `Application_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_File_Application_idx` (`Application_id` ASC),
+  CONSTRAINT `fk_File_Application`
+    FOREIGN KEY (`Application_id`)
+    REFERENCES `application-database`.`Application` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

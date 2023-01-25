@@ -42,12 +42,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`School` (
   `orgnr` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `County_countyNumber` CHAR(2) NOT NULL,
+  `schoolName` VARCHAR(45) NOT NULL,
+  `countyNumber` CHAR(2) NOT NULL,
   PRIMARY KEY (`orgnr`),
-  INDEX `fk_School_County1_idx` (`County_countyNumber` ASC),
+  INDEX `fk_School_County1_idx` (`countyNumber` ASC),
   CONSTRAINT `fk_School_County1`
-    FOREIGN KEY (`County_countyNumber`)
+    FOREIGN KEY (`countyNumber`)
     REFERENCES `application-database`.`County` (`countyNumber`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -59,7 +59,17 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`SubjectArea` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `subject` VARCHAR(45) NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `application-database`.`Position`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `application-database`.`Position` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -74,25 +84,32 @@ CREATE TABLE IF NOT EXISTS `application-database`.`Application` (
   `email` VARCHAR(45) NOT NULL,
   `tel` VARCHAR(45) NULL,
   `ContactPerson_id` INT NULL,
-  `School_orgnr` INT NOT NULL,
-  `SubjectArea_id` INT NOT NULL,
+  `schoolOrgnr` INT NOT NULL,
+  `subjectId` INT NOT NULL,
+  `positionId` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Application_ContactPerson1_idx` (`ContactPerson_id` ASC),
-  INDEX `fk_Application_School1_idx` (`School_orgnr` ASC),
-  INDEX `fk_Application_SubjectArea1_idx` (`SubjectArea_id` ASC),
+  INDEX `fk_Application_School1_idx` (`schoolOrgnr` ASC),
+  INDEX `fk_Application_SubjectArea1_idx` (`subjectId` ASC),
+  INDEX `fk_Application_Position1_idx` (`positionId` ASC),
   CONSTRAINT `fk_Application_ContactPerson1`
     FOREIGN KEY (`ContactPerson_id`)
     REFERENCES `application-database`.`ContactPerson` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Application_School1`
-    FOREIGN KEY (`School_orgnr`)
+    FOREIGN KEY (`schoolOrgnr`)
     REFERENCES `application-database`.`School` (`orgnr`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Application_SubjectArea1`
-    FOREIGN KEY (`SubjectArea_id`)
+    FOREIGN KEY (`subjectId`)
     REFERENCES `application-database`.`SubjectArea` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Application_Position1`
+    FOREIGN KEY (`positionId`)
+    REFERENCES `application-database`.`Position` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

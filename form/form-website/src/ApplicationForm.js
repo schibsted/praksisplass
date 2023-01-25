@@ -6,15 +6,17 @@ const ApplicationForm = ({props}) => {
     const [firstname, setFirstname] = useState()
     const [lastname, setLastname] = useState()
     const [email, setEmail] = useState()
-    const [phoneNumber, setPhoneNumber] = useState()
+    const [tel, setTel] = useState()
     const [county, setCounty] = useState()
     const [school, setSchool] = useState()
     const [subject, setSubject] = useState()
-    const [applicationLetter, setApplicationLetter] = useState()
+    const [position, setPosition] = useState()
+    const [files, setFiles] = useState()
 
     const [counties, setCounties] = useState()
     const [schools, setSchools] = useState()
     const [subjects, setSubjects] = useState()
+    const [positions, setPositions] = useState()
 
     const navigate = useNavigate()
 
@@ -40,13 +42,22 @@ const ApplicationForm = ({props}) => {
 
     useEffect(() => {
         const fetchSubjects = async () => {
-            const request = await fetch('http://localhost:3100/get-subject-areas')
+            const request = await fetch(`http://localhost:3100/get-subject-areas`)
             const result = await request.json()
-            console.log(result)
             setSubjects(result)
         }
 
         fetchSubjects()
+    }, [])
+
+    useEffect(() => {
+        const fetchPositions = async () => {
+            const request = await fetch(`http://localhost:3100/get-positions`)
+            const result = await request.json()
+            setPositions(result)
+        }
+
+        fetchPositions()
     }, [])
 
     const handleSubmit = (e) => {
@@ -57,13 +68,14 @@ const ApplicationForm = ({props}) => {
         formData.append("firstname", firstname)
         formData.append("lastname", lastname)
         formData.append("email", email)
-        formData.append("phoneNumber", phoneNumber)
+        formData.append("tel", tel)
         formData.append("school", school)
         formData.append("subject", subject)
+        formData.append("position", position)
         
-        if (applicationLetter){
-            for(let i =0; i < applicationLetter.length; i++) {
-                formData.append("files", applicationLetter[i]);
+        if (files){
+            for(let i =0; i < files.length; i++) {
+                formData.append("files", files[i]);
             }
         }
 
@@ -85,9 +97,12 @@ const ApplicationForm = ({props}) => {
             return promise
         } 
 
-        fetchAPI(formData).then(res => {
-            console.log('res')
-        })
+        fetchAPI(formData)
+    }
+
+    const removeFile = (index) => {
+        const remainingFiles = files.filter((file, i) => i !== index)
+        setFiles(remainingFiles)
     }
 
     return (
@@ -101,10 +116,11 @@ const ApplicationForm = ({props}) => {
                 <label>E-post:</label>
                 <input type="email" placeholder="E-post" onChange={e => setEmail(e.target.value)} />
                 <label>Telefonnummer:</label>
-                <input type="tel" placeholder="Tlf" onChange={e => setPhoneNumber(e.target.value)} />
+                <input type="tel" placeholder="Tlf" onChange={e => setTel(e.target.value)} />
                 <label>Fylke:</label>
                 <select onChange={e => setCounty(e.target.options[e.target.selectedIndex].id)}>
                     <option>Velg fylke</option>
+
                     {counties?.map(county => {
                         if (county.name == 'Uoppgitt') return
                         return <option key={county.code} id={county.code}>{county.name}</option>
@@ -113,27 +129,54 @@ const ApplicationForm = ({props}) => {
 
                 {county && (
                     <>
-                    <label>Skole:</label>
-                    <select onChange={e => setSchool(e.target.options[e.target.selectedIndex].id)}>
-                        <option>Velg skole</option>
-                        {subjects?.map(subject => {
-                            if (subject.name == 'Uoppgitt') return
-                            return <option key={subject.id} id={subject.name}>{subject.name}</option>
-                        })}
-                    </select>
+                        <label>Skole:</label>
+                        <select onChange={e => setSchool(e.target.options[e.target.selectedIndex].id)}>
+                            <option>Velg skole</option>
+
+                            {schools?.filter(school => school.Fylkesnr === county).map( school => (
+                                <option key={school.Orgnr} id={school.Orgnr}>{school.Navn}</option>
+                            ))}
+                        </select>
                     </>
                 )}
                 
                 <label>Fagområde:</label>
                 <select onChange={e => setSubject(e.target.options[e.target.selectedIndex].id)}>
-                    <option>Velt fagområde</option>
-                    {counties?.map(county => {
-                        if (county.name == 'Uoppgitt') return
-                        return <option key={county.code} id={county.code}>{county.name}</option>
+                    <option>Velg fagområde</option>
+
+                    {subjects?.map(subject => {
+                        return <option key={subject.id} id={subject.id}>{subject.name}</option>
                     })}
                 </select>
-                <label>Filer(pdf):</label>
-                <input type="file"  multiple accept="application/pdf" onChange={e => setApplicationLetter(e.target.files)} />
+
+                <label>Stilling:</label>
+                <select onChange={e => setPosition(e.target.options[e.target.selectedIndex].id)}>
+                    <option>Velg stilling</option>
+                    {positions?.map(position => {
+                        return <option key={position.id} id={position.id}>{position.type}</option>
+                    })}
+                </select>
+
+                <label>CV og søknad:</label>
+                <label className="input-file">
+                    <span class="material-symbols-outlined">
+                        upload_file
+                    </span>
+                    Velg fil(pdf)
+                    <input type="file"  multiple accept="application/pdf" files={files} onChange={e => setFiles(Array.from(e.target.files))} />
+                </label>
+
+                {files?.length > 0 && (
+                    <div className="file-list">
+                        {files.map(file => (
+                            <div className="show-selected-files" key={file.name}>
+                                <span className="file-name">{file.name}</span>
+                                <button className="remove-file" key={file.name} onClick={e => removeFile(files.indexOf(file))}>X</button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
                 <input type="submit" onClick={e => handleSubmit(e)} />
             </form>
         </div>

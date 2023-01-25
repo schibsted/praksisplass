@@ -148,6 +148,14 @@ app.get('/get-subject-areas', (req, res) => {
     })
 })
 
+app.get('/get-positions', (req, res) => {
+    database("SELECT * FROM Position", [], function(result){
+        res.send(result)
+    })
+})
+
+app
+
 const database = (sql, values, callback) => {
     con.connect(function(err) {
         con.query(sql, values, function (err, result) {
@@ -176,6 +184,7 @@ app.post('/send-form', upload.array('files'), (req, res) => {
         fs.unlink(filePath, resultHandler);
     });
 
+    console.log('1 application submitted')
     res.end(JSON.stringify('ok'))
 });
 
@@ -183,12 +192,11 @@ app.post('/send-form', upload.array('files'), (req, res) => {
 const uploadToDatabase = async (data, files) => {
     con.connect(function(err) {
         // var sql = "INSERT INTO Application (firstname, lastname, email, tel, School_id, Study_id) VALUES (?, ?, ?, ?, (SELECT id FROM School WHERE name=?), )";
-        var sql = "INSERT INTO Application (firstname, lastname, email, tel, School_orgnr, SubjectArea_id) VALUES (?, ?, ?, ?, ?, (SELECT id FROM SubjectArea WHERE subject=?))";
+        var sql = "INSERT INTO Application (firstname, lastname, email, tel, schoolOrgnr, subjectId, positionId) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-        var values = [data.firstname, data.lastname, data.email, data.phoneNumber, data.school, data.study]
+        var values = [data.firstname, data.lastname, data.email, data.tel, data.school, data.subject, data.position]
         con.query(sql, values, function (err, result) {
             if (err) throw err;
-            console.log("1 record inserted");
         });
         
         var sql = "INSERT INTO File (filename, fileKey, Application_id) VALUES (?, (SELECT (id) FROM Application WHERE id=(SELECT max(id) FROM Application)))"
@@ -198,11 +206,8 @@ const uploadToDatabase = async (data, files) => {
 
             con.query(sql, [values], function (err, result) {
                 if (err) throw err;
-                console.log("1 file inserted");
             });
         });
-        
-       
     });    
 };
 

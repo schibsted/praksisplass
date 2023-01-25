@@ -5,12 +5,12 @@ export default function Applicant() {
   const { id } = useParams();
   const [applicant, setApplicant] = useState({});
 
-  const { firstname, lastname, email, phoneNumber, Schools_has_study_Schools_name: school, Schools_has_study_study_study: study } = applicant;
+  const { firstname, lastname, email, tel, schoolName, subjectName } = applicant;
 
   useEffect(() => {
     async function getApplicant() {
-      const applicants = await fetch(`http://localhost:3100/api/applications/${id}`)
-        .then(res => res.json());
+      const request = await fetch(`http://localhost:3100/api/applications/${id}`)
+      const applicants = await request.json()
 
       if (applicants.length > 0) {
         setApplicant(applicants[0]);
@@ -19,8 +19,6 @@ export default function Applicant() {
 
     getApplicant();
   }, [id]);
-
-  console.log({id})
       
   return (
     <div>
@@ -32,13 +30,13 @@ export default function Applicant() {
         {email}
       </div>
       <div>
-        {phoneNumber}
+        {tel}
       </div>
       <div>
-        {school}
+        {schoolName}
       </div>
       <div>
-        {study}
+        {subjectName}
       </div>
     </div>
   );

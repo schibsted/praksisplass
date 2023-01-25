@@ -1,33 +1,19 @@
-import React, { useState } from 'react';
+import React, { Component } from "react";
+import { render } from "react-dom";
 
-function CheckboxFilter({ options, onChange }) {
-  const [selectedOptions, setSelectedOptions] = useState([]);
-
-  function handleOptionChange(option) {
-    if (selectedOptions.includes(option)) {
-      setSelectedOptions(selectedOptions.filter(o => o !== option));
-    } else {
-      setSelectedOptions([...selectedOptions, option]);
-    }
-    onChange(selectedOptions);
-  }
-
-  return (
-    <div>
-      {options.map(option => (
-        <label key={option}>
-          <input
-            type="checkbox"
-            value={option}
-            checked={selectedOptions.includes(option)}
-            onChange={() => handleOptionChange(option)}
-          />
-          {option}
-        </label>
-      ))}
-    </div>
-  );
+export default function CheckboxFilter( {checkboxFilter, handleCheckboxChange} ) {
+  return(
+    <>
+      <div>
+        <ul>
+          {checkboxFilter.map((school, study) => (
+            <li key={school.schoolId} >
+              <input type="checkbox" checked={school.checked} onChange={() => handleCheckboxChange(school.schoolId)} />
+              <label>{school.schoolName}</label>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )
 }
-
-export default CheckboxFilter;
-﻿

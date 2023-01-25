@@ -55,7 +55,7 @@ app.post('/sendData', (req, res) => {
 
 app.get('/api/applications', (req, res) => {
     con.connect(function(err) {
-        con.query("SELECT id, firstname, lastname, email FROM applications", function (err, result) {
+        con.query("SELECT * FROM Application RIGHT JOIN School ON (Application.schoolOrgnr=School.orgnr)", function (err, result) {
             if (err) throw err;
             res.send(result)
         });
@@ -64,7 +64,25 @@ app.get('/api/applications', (req, res) => {
 
 app.get('/api/applications/:id', (req, res) => {
     con.connect(function(err) {
-        con.query("SELECT * FROM applications WHERE id = ?", [req.params.id], function (err, result) {
+        con.query("SELECT * FROM Application RIGHT JOIN School ON (Application.schoolOrgnr=School.orgnr) RIGHT JOIN SubjectArea ON (Application.SubjectId=SubjectArea.id) WHERE Application.id = ?", [req.params.id], function (err, result) {
+            if (err) throw err;
+            res.send(result)
+        });
+    });
+})
+
+app.get('/api/schools', (req, res) => {
+    con.connect(function(err) {
+        con.query("SELECT * FROM School", function (err, result) {
+            if (err) throw err;
+            res.send(result)
+        });
+    });
+})
+
+app.get('/api/studies', (req, res) => {
+    con.connect(function(err) {
+        con.query("SELECT * FROM SubjectArea", function (err, result) {
             if (err) throw err;
             res.send(result)
         });

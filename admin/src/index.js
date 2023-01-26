@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { RecoilRoot } from 'recoil';
 import './index.css';
 import Layout from './components/Layout';
 import reportWebVitals from './reportWebVitals';
@@ -9,13 +10,15 @@ import Applicant from './components/Applicant';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout />}>
-            <Route path="/application/:id" element={<Applicant />} />
-        </Route> 
-      </Routes>
-    </BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Layout />}>
+              <Route path="/application/:id" element={<Applicant />} />
+          </Route> 
+        </Routes>
+      </BrowserRouter>
+    </RecoilRoot>
   </React.StrictMode>
 );
 

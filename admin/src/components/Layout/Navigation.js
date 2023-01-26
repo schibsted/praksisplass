@@ -1,25 +1,21 @@
 import { useEffect, useState } from 'react';
 import ApplicationList from './ApplicationList';
-import CheckboxFilter from './CheckboxFilter';
+import CheckboxSchools from './Filter/CheckboxSchools';
+// import CheckboxSubjects from './Filter/CheckboxSubjects';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
 import './Navigation.css';
+import { schools, query, filteredApplicants, counties, subjects } from '../../atoms'
 
-export default function Navigation ({applicants}) {
-  const [query, setQuery] = useState('');
-  const [schools, setSchools] = useState([]);
 
-  const handleCheckboxChange = (schoolId) => {
-    setSchools(state => {
-      return state.map(school => {
-        if (school.schoolId === schoolId) {
-          return {
-            ...school,
-            checked: !school.checked,
-          }
-        }
-        return school
-      })
-    })
-  }
+
+export default function Navigation({applicants}) {
+  const updateQuery = useSetRecoilState(query)
+
+  const updateSchools = useSetRecoilState(schools);
+
+  const updateCounties = useSetRecoilState(counties);
+
+ 
 
   useEffect(() => {
     const fetchStudies = async () => {
@@ -30,13 +26,13 @@ export default function Navigation ({applicants}) {
     }
 
     fetchStudies()
-  })
+  }, [])
 
-  useEffect(() => {
+  useEffect(()  => {
     const fetchSchools = async () => {
       const request = await fetch(`http://localhost:3100/api/schools`)
       const result = await request.json()
-      
+
       const schoolsArray = []
       result.forEach(school => {
         schoolsArray.push(
@@ -44,30 +40,49 @@ export default function Navigation ({applicants}) {
               checked: true,
               schoolName: school.schoolName,
               schoolId: school.orgnr,
+              countyNumber: school.countyNumber,
+              type: 'school',
             }
         )
       })
 
-      setSchools(schoolsArray)
+      updateSchools(schoolsArray)
     }
 
     fetchSchools()
   }, [])
 
-  const search = (data) =>  {
-    const schoolArray = schools.filter(school => school.checked === true)
-    const schoolIdArray = schoolArray.map(school => school.schoolId)
-    data = data.filter(item => schoolIdArray.includes(item.schoolOrgnr))
+  useEffect(()  => {
+    const fetchCounties = async () => {
+      const request = await fetch(`http://localhost:3100/api/counties`)
+      const result = await request.json()
 
-    return data.filter(item=>item.firstname.toLowerCase().includes(query.toLowerCase()))
-  };
+      const countiesArray = []
+      result.forEach(county => {
+        countiesArray.push(
+            {
+              checked: true,
+              countyName: county.name,
+              countyNumber: county.countyNumber,
+              type: 'county',
+            }
+        )
+      })
+
+      updateCounties(countiesArray)
+    }
+
+    fetchCounties()
+  }, [])
+
+  
   
   return (
     <div>
       <h1>search</h1>
-      <input type="text" placeholder="Search..." onChange={e => setQuery(e.target.value)} />
-      <CheckboxFilter checkboxFilter={schools} handleCheckboxChange={handleCheckboxChange} />
-      <ApplicationList applicants={search(applicants)}/>
+      <input type="text" placeholder="Search..." onChange={e => updateQuery(e.target.value)} />
+      <CheckboxSchools />
+      {/* <CheckboxSubjects /> */}
     </div>
   )
 }

@@ -55,7 +55,7 @@ app.post('/sendData', (req, res) => {
 
 app.get('/api/applications', (req, res) => {
     con.connect(function(err) {
-        con.query("SELECT * FROM Application RIGHT JOIN School ON (Application.schoolOrgnr=School.orgnr)", function (err, result) {
+        con.query("SELECT * FROM Application", function (err, result) {
             if (err) throw err;
             res.send(result)
         });
@@ -74,6 +74,15 @@ app.get('/api/applications/:id', (req, res) => {
 app.get('/api/schools', (req, res) => {
     con.connect(function(err) {
         con.query("SELECT * FROM School", function (err, result) {
+            if (err) throw err;
+            res.send(result)
+        });
+    });
+})
+
+app.get('/api/counties', (req, res) => {
+    con.connect(function(err) {
+        con.query("SELECT * FROM County", function (err, result) {
             if (err) throw err;
             res.send(result)
         });

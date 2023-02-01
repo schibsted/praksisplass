@@ -3,27 +3,32 @@ import './Desicion.css'
 
 export default function Desicion( { status, setStatus } ) {
     const [showActions, setShowActions] = useState(false)
+    
+    let className = ''
+
+    if (status.completed === false) {
+        className = 'border-blue'
+    }
+    else if (status.action.decision === 'accepted') {
+        className = 'bacground-color-green icon-checked'
+    }
+    else if (status.action.decision === 'rejected') {
+        className = 'bacground-color-red icon-remove'
+    }
 
     console.log(status)
 
-    let containerClasses = " "
-    let iconClasses = " "
-
-    if (status.completed == true) {
-        containerClasses += "bacground-color-blue"
-        iconClasses += "icon-checked"
-    }
-    else {
-        containerClasses += "border-blue"
-    }
-
-
     return (
         <div className="status-content-status">
-            <button id={status.key} className={`status-content-button tooltip ${containerClasses} ${iconClasses}`} onClick={() => setShowActions(!showActions)}>
+            <button className={`status-content-button tooltip ${className}`} onClick={() => setShowActions(!showActions)}>
                 <span class={`tooltiptext ${showActions ? 'tooltip-active' : ''}`}>
                     {status.action?.options.map(option => {
-                        return <p onClick={() => setStatus(option.key)}>{option.displayValue}</p>
+                        return(
+                            <div className="status-content-status">
+                                <button id={option.key} className={`status-content-button ${option.class}`} onClick={e => setStatus(e.target.id)}></button>
+                                <p className="applicant-content-p">{option.displayValue}</p> 
+                            </div>
+                        )
                     })}
                 </span>
             </button>

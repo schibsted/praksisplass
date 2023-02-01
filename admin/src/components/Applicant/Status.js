@@ -21,7 +21,7 @@ export default function Status() {
             body: JSON.stringify({ id: applicantState.id, status: status })
         };
         
-        // await fetch('http://localhost:3100/api/status', requestOptions)
+        await fetch('http://localhost:3100/api/status', requestOptions)
 
         updateApplicant({
             ...applicantState,

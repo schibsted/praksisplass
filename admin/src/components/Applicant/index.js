@@ -49,6 +49,21 @@ export default function Applicant() {
 
       });
     });
+
+    updateStatus(prev => {
+      return prev?.map((status, i) => {
+        if (status.action?.type === 'decision') {
+          return {
+            ...status,
+            action: {
+              ...status.action,
+              decision: applicantState.status
+            }
+          }
+        }
+        return status;
+      });
+    })
   }, [applicantState]);
 
   return (

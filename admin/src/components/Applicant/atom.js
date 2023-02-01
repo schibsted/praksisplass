@@ -31,16 +31,17 @@ export const status = atom ({
             completed: false,
             action: {
                 type: 'decision',
+                decision: 'none',
                 options: [
                     {
-                        key: 'accept',
+                        key: 'accepted',
                         displayValue:'Accept',
-                        iconClass: 'icon-checked bacground-color-green',
+                        class: 'icon-checked bacground-color-green',
                     },
                     {
-                        key: 'reject',
+                        key: 'rejected',
                         displayValue:'Reject',
-                        iconClass: 'radio_button_unchecked',
+                        class: 'icon-remove bacground-color-red',
                     }
                 ],
             }

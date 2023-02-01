@@ -12,6 +12,9 @@
 }
 
 .tooltip .tooltiptext {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
     visibility: hidden;
     width: 120px;
     background-color: #ffffff;
@@ -21,8 +24,9 @@
     padding: 5px 0;
     position: absolute;
     z-index: 1;
-    top: -4px;
+    top: -100%;
     right: 150%;
+    padding: 10px;
 }
 
 .tooltip .tooltiptext::after {

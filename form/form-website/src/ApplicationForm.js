@@ -145,7 +145,7 @@ const ApplicationForm = ({props}) => {
                     <option>Velg fagområde</option>
 
                     {subjects?.map(subject => {
-                        return <option key={subject.id} id={subject.id}>{subject.name}</option>
+                        return <option key={subject.id} id={subject.id}>{subject.subjectName}</option>
                     })}
                 </select>
 
@@ -153,7 +153,7 @@ const ApplicationForm = ({props}) => {
                 <select onChange={e => setPosition(e.target.options[e.target.selectedIndex].id)}>
                     <option>Velg stilling</option>
                     {positions?.map(position => {
-                        return <option key={position.id} id={position.id}>{position.type}</option>
+                        return <option key={position.id} id={position.id}>{position.positionType}</option>
                     })}
                 </select>
 

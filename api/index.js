@@ -62,14 +62,50 @@ app.get('/api/applications', (req, res) => {
     });
 })
 
-app.get('/api/applications/:id', (req, res) => {
-    con.connect(function(err) {
-        con.query("SELECT * FROM Application RIGHT JOIN School ON (Application.schoolOrgnr=School.orgnr) RIGHT JOIN SubjectArea ON (Application.SubjectId=SubjectArea.id) WHERE Application.id = ?", [req.params.id], function (err, result) {
-            if (err) throw err;
-            res.send(result)
+app.get('/api/applications/:id', async (req, res) => {
+    const applicant = await getApplicant(req.params.id)
+    const files = await getFIles(req.params.id)
+    
+    res.send({...applicant[0], ...files})
+})
+
+const getApplicant = async (id) => {
+    return new Promise(resolve => {
+        con.connect(function(err) {
+            con.query(`
+                        SELECT * FROM Application
+                        RIGHT JOIN School ON (Application.schoolOrgnr=School.orgnr)
+                        RIGHT JOIN SubjectArea ON (Application.SubjectId=SubjectArea.subject_id)
+                        RIGHT JOIN Position ON (Application.positionId=Position.position_id)
+                        WHERE Application.id = ?`, [id], function (err, result) {
+                if (err) throw err;
+                resolve(result)
+            });
+        });
+      });
+    
+}
+
+const getFIles = async (id) => {
+    const files = await new Promise(resolve => {
+        con.connect(function(err) {
+            con.query("SELECT * FROM FIle where Application_id=?", [id], function (err, result) {
+                if (err) throw err;
+                resolve(result)
+            });
         });
     });
-})
+
+    const filesArray = []
+    for (let i = 0; i < files.length; i++) {
+        const url = await getFIleUrl(files[i].fileKey)
+        filesArray.push({url: url.url, filename: files[i].filename})
+    }
+
+    return {
+        files: filesArray,
+    }
+}
 
 app.get('/api/schools', (req, res) => {
     con.connect(function(err) {
@@ -92,6 +128,16 @@ app.get('/api/counties', (req, res) => {
 app.get('/api/studies', (req, res) => {
     con.connect(function(err) {
         con.query("SELECT * FROM SubjectArea", function (err, result) {
+            if (err) throw err;
+            res.send(result)
+        });
+    });
+})
+
+app.post('/api/status', (req, res) => {
+    console.log(req.body)
+    con.connect(function(err) {
+        con.query("UPDATE Application SET status = ? WHERE id=?", [req.body.status, req.body.id], function (err, result) {
             if (err) throw err;
             res.send(result)
         });

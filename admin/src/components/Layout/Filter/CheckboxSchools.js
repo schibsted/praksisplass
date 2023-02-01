@@ -1,7 +1,8 @@
 import React, { Component, useState } from "react";
 import { render } from "react-dom";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { schools, counties } from '../../../atoms'
+import { schools, counties } from '../../../atoms';
+import './CheckboxSchools.css';
 
 export default function CheckboxSchools() {
   const schoolsState = useRecoilValue(schools)
@@ -81,7 +82,7 @@ export default function CheckboxSchools() {
             }
             else {
               return (
-                <li key={checkbox.schoolId} >
+                <li key={checkbox.schoolId} className="filter-school">
                 <input type="checkbox" checked={checkbox.checked} onChange={() => handleCheckboxChange(checkbox)} />
                 <label>{checkbox.schoolName}</label>
               </li>

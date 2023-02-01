@@ -33,10 +33,19 @@ export default function CheckboxSubjects() {
             <h3>Filter by Subject</h3>
             <ul>
                 {checkboxesArray.map((subject) => {
+                  return (
                     <li key={subject.subjectId}>
-                    <input type="checkbox" checked={subject.checked} onChange={() => handleCheckboxChange(subject)} />
-                    <label>{subject.subjectName}</label>
-                    </li>  
+                      <label>
+                        <input
+                          type="checkbox"
+                          value={subject.subjectId}
+                          checked={subject.checked}
+                          onChange={() => handleCheckboxChange(subject.subjectId)}
+                        />
+                        {subject.subjectName}
+                      </label>
+                    </li>
+                  )
                })}
             </ul>
           </div>

@@ -1,0 +1,30 @@
+.options-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.options-container > button {
+    margin: 0 0 0 12px;
+}
+
+.send-button {
+    height: 31px;
+    width: 132px;
+    background-color: #5461d7;
+    border: none;
+    border-radius: 16px;
+    color: #ffffff;
+    font-size: 12px;
+}
+
+.more-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 32px;
+    width: 32px;
+    background-color: #d9d9d9;
+    border: none;
+    border-radius: 50%;
+}

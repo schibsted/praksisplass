@@ -89,7 +89,7 @@ app.get('/api/counties', (req, res) => {
     });
 })
 
-app.get('/api/studies', (req, res) => {
+app.get('/api/subjects', (req, res) => {
     con.connect(function(err) {
         con.query("SELECT * FROM SubjectArea", function (err, result) {
             if (err) throw err;

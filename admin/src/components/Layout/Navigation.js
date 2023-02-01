@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import ApplicationList from './ApplicationList';
 import CheckboxSchools from './Filter/CheckboxSchools';
-// import CheckboxSubjects from './Filter/CheckboxSubjects';
+import CheckboxSubjects from './Filter/CheckboxSubjects';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import './Navigation.css';
 import { schools, query, filteredApplicants, counties, subjects } from '../../atoms'
@@ -15,17 +15,29 @@ export default function Navigation({applicants}) {
 
   const updateCounties = useSetRecoilState(counties);
 
- 
+  const updateSubjects = useSetRecoilState(subjects);
 
-  useEffect(() => {
-    const fetchStudies = async () => {
-      const request = await fetch(`http://localhost:3100/api/studies`)
+  useEffect(()  => {
+    const fetchSubjects = async () => {
+      const request = await fetch(`http://localhost:3100/api/subjects`)
       const result = await request.json()
 
-      console.log(result)
+      const subjectsArray = []
+      result.forEach(subject => {
+        subjectsArray.push(
+            {
+              checked: true,
+              subjectName: subject.name,
+              subjectId: subject.id,
+              type: 'subject',
+            }
+        )
+      })
+
+      updateSubjects(subjectsArray)
     }
 
-    fetchStudies()
+    fetchSubjects()
   }, [])
 
   useEffect(()  => {
@@ -78,11 +90,11 @@ export default function Navigation({applicants}) {
   
   
   return (
-    <div>
-      <h1>search</h1>
+    <div className="nav">
+      <h3>search</h3>
       <input type="text" placeholder="Search..." onChange={e => updateQuery(e.target.value)} />
-      <CheckboxSchools />
-      {/* <CheckboxSubjects /> */}
+      <CheckboxSubjects />
+      <CheckboxSchools /> 
     </div>
   )
 }

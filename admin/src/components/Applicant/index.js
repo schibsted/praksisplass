@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import { useParams } from 'react-router-dom';
+import './index.css'
 
 export default function Applicant() {
   const { id } = useParams();
@@ -21,7 +22,7 @@ export default function Applicant() {
   }, [id]);
       
   return (
-    <div>
+    <div className="applicant">
       <h2>Applicant</h2>
       <div>
         {firstname} {lastname}

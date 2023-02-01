@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { schools, query, filteredApplicants } from '../../atoms';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
+import './ApplicationList.css'
 
 
 export default function ApplicationList({ applicants }) {
@@ -32,22 +33,26 @@ export default function ApplicationList({ applicants }) {
 
 
   return (
+    <>
+    <div classname="applicants">
       <table>
-        <h2>Applicants</h2>
-        <tbody>
-          {search(filteredApplicantsState).map(application => (
-            <tr key={application.id}>
-             <Link to={`/application/${application.id}`}>
+          <h2>Applicants</h2>
+          <tbody>
+            {search(filteredApplicantsState).map(application => (
+              <tr key={application.id}>
+              <Link to={`/application/${application.id}`} style={{ color:'black' }}>
+                <div>
+              {application.firstname + ' ' + application.lastname}
+              </div>
               <div>
-             {application.firstname + ' ' + application.lastname}
-             </div>
-             <div>
-              {application.email}
-             </div>
-            </Link>
-           </tr>
-           ))}
-        </tbody>
-      </table>
+                {application.email}
+              </div>
+              </Link>
+            </tr>
+            ))}
+          </tbody>
+        </table>
+    </div>
+    </>
   );
 }

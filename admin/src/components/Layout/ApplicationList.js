@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { schools, query, filteredApplicants } from '../../atoms';
+import { schools, subjects, query, filteredApplicants } from '../../atoms';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
-
+import './ApplicationList.css'
 
 export default function ApplicationList({ applicants }) {
   const filteredApplicantsState = useRecoilValue(filteredApplicants)
@@ -10,13 +10,14 @@ export default function ApplicationList({ applicants }) {
 
   const schoolsState = useRecoilValue(schools)
 
+  const subjectsState = useRecoilValue(subjects)
+
   const queryState = useRecoilValue(query)
   const updateQuery = useSetRecoilState(query)
 
   const search = (data) =>  {
     return data.filter(item=>item.firstname?.toLowerCase().includes(queryState.toLowerCase()))
   };
-
 
   useEffect(() => {
     const newFilteredApplicants = []
@@ -27,27 +28,43 @@ export default function ApplicationList({ applicants }) {
          }
        })
      })
+
+      newFilteredApplicants.forEach(applicant => {
+        subjectsState.forEach(subject => {
+          if (subject.checked === false && subject.subjectId === applicant.subjectId) {
+            var index = newFilteredApplicants.indexOf(applicant);
+            if (index !== -1) {
+              newFilteredApplicants.splice(index, 1);
+}
+          }
+        })
+      })
+
      updateFilteredApplicants(newFilteredApplicants)
- }, [schoolsState])
+ }, [schoolsState, subjectsState])
 
-
+ 
   return (
+    <>
+    <div classname="applicants">
       <table>
-        <h2>Applicants</h2>
-        <tbody>
-          {search(filteredApplicantsState).map(application => (
-            <tr key={application.id}>
-             <Link to={`/application/${application.id}`}>
+          <h2>Applicants</h2>
+          <tbody>
+            {search(filteredApplicantsState).map(application => (
+              <tr key={application.id}>
+              <Link to={`/application/${application.id}`} style={{ color:'black' }}>
+                <div>
+              {application.firstname + ' ' + application.lastname}
+              </div>
               <div>
-             {application.firstname + ' ' + application.lastname}
-             </div>
-             <div>
-              {application.email}
-             </div>
-            </Link>
-           </tr>
-           ))}
-        </tbody>
-      </table>
+                {application.email}
+              </div>
+              </Link>
+            </tr>
+            ))}
+          </tbody>
+        </table>
+    </div>
+    </>
   );
 }

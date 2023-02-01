@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navigation from './Navigation';
@@ -24,7 +23,7 @@ export default function Layout( props ) {
   return (
     <div className='container'>
         <Navigation className="Nav"  applicants={applicantsState} />
-        <ApplicationList className="ApplicationList"applicants={applicantsState} />
+        <ApplicationList className="ApplicationList" applicants={applicantsState} />
         <Outlet className="Applicant"/>
     </div>
   );

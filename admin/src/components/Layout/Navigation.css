@@ -1,0 +1,9 @@
+.nav {
+    background-color: #E5E7EB !important;
+}
+
+ul {
+    list-style: none;
+    padding: 10px;
+    font-size: 15px;
+}

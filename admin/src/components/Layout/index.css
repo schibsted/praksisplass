@@ -1,22 +1,22 @@
-.container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 3fr;
-    grid-template-rows: auto;
-    grid-template-areas:
-    "Nav ApplicationList Applicant"
-}
+@media screen {
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 3fr;
+        grid-template-rows: 100vh;
+        background-color: white;
+        grid-template-areas: 
+        "Nav ApplicationList Applicant";
+    }
 
-.Nav {
-    grid-area: Nav;
-    background-color: rgb(202, 199, 199);
-}
+    .Nav {
+        grid-area: Nav;
+    }
 
-.ApplicationList {
-    grid-area: ApplicationList;
-    background-color: white;
-}
+    .ApplicationList {
+        grid-area: ApplicationList;
+    }
 
-.Applicant {
-    grid-area: Applicant;
-    background-color: rgb(153, 153, 155);
+    .Applicant {
+        grid-area: Applicant;
+    }
 }

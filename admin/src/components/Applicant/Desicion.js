@@ -16,8 +16,6 @@ export default function Desicion( { status, setStatus } ) {
         className = 'bacground-color-red icon-remove'
     }
 
-    console.log(status)
-
     return (
         <div className="status-content-status">
             <button className={`status-content-button tooltip ${className}`} onClick={() => setShowActions(!showActions)}>

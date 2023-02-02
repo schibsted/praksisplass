@@ -18,12 +18,12 @@ USE `application-database` ;
 -- Table `application-database`.`ContactPerson`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`ContactPerson` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `contactPerson_id` INT NOT NULL AUTO_INCREMENT,
   `fistname` VARCHAR(45) NOT NULL,
   `lastname` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
   `tel` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`contactPerson_id`))
 ENGINE = InnoDB;
 
 
@@ -58,9 +58,9 @@ ENGINE = InnoDB;
 -- Table `application-database`.`SubjectArea`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`SubjectArea` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
+  `subject_id` INT NOT NULL AUTO_INCREMENT,
+  `subjectName` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`subject_id`))
 ENGINE = InnoDB;
 
 
@@ -68,9 +68,9 @@ ENGINE = InnoDB;
 -- Table `application-database`.`Position`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`Position` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `type` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
+  `position_id` INT NOT NULL AUTO_INCREMENT,
+  `positionType` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`position_id`))
 ENGINE = InnoDB;
 
 
@@ -87,6 +87,7 @@ CREATE TABLE IF NOT EXISTS `application-database`.`Application` (
   `schoolOrgnr` INT NOT NULL,
   `subjectId` INT NOT NULL,
   `positionId` INT NOT NULL,
+  `status` ENUM('recieved', 'assigned', 'reviewed', 'accepted', 'rejected') NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_Application_ContactPerson1_idx` (`ContactPerson_id` ASC),
   INDEX `fk_Application_School1_idx` (`schoolOrgnr` ASC),
@@ -94,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `application-database`.`Application` (
   INDEX `fk_Application_Position1_idx` (`positionId` ASC),
   CONSTRAINT `fk_Application_ContactPerson1`
     FOREIGN KEY (`ContactPerson_id`)
-    REFERENCES `application-database`.`ContactPerson` (`id`)
+    REFERENCES `application-database`.`ContactPerson` (`contactPerson_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Application_School1`
@@ -104,12 +105,12 @@ CREATE TABLE IF NOT EXISTS `application-database`.`Application` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Application_SubjectArea1`
     FOREIGN KEY (`subjectId`)
-    REFERENCES `application-database`.`SubjectArea` (`id`)
+    REFERENCES `application-database`.`SubjectArea` (`subject_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Application_Position1`
     FOREIGN KEY (`positionId`)
-    REFERENCES `application-database`.`Position` (`id`)
+    REFERENCES `application-database`.`Position` (`position_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -130,6 +131,16 @@ CREATE TABLE IF NOT EXISTS `application-database`.`File` (
     REFERENCES `application-database`.`Application` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `application-database`.`Result`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `application-database`.`Result` (
+  `id` INT NOT NULL,
+  `result` VARCHAR(45) NULL,
+  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 

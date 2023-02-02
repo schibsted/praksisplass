@@ -27,8 +27,8 @@ export default function Navigation({applicants}) {
         subjectsArray.push(
             {
               checked: true,
-              subjectName: subject.name,
-              subjectId: subject.id,
+              subjectName: subject.subjectName,
+              subjectId: subject.subject_id,
               type: 'subject',
             }
         )

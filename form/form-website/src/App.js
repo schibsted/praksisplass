@@ -6,16 +6,11 @@ import ApplicationSent from './ApplicationSent';
 
 function App() {
   return (
-    <div className="App">
-      <div id="content">
-        <div className="application-form">
-          <Routes>
-            <Route path="/" element={<ApplicationForm />} />
-            <Route path="/application-is-sent" element={<ApplicationSent />} />
-          </Routes>
-        </div>
-          
-      </div>
+  <div className="App">
+        <Routes>
+          <Route path="/" element={<ApplicationForm />} />
+          <Route path="/application-is-sent" element={<ApplicationSent />} />
+        </Routes> 
     </div>
     
   );

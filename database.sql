@@ -32,7 +32,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `application-database`.`County` (
   `countyNumber` CHAR(2) NOT NULL,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(100) NULL,
   PRIMARY KEY (`countyNumber`))
 ENGINE = InnoDB;
 
@@ -131,16 +131,6 @@ CREATE TABLE IF NOT EXISTS `application-database`.`File` (
     REFERENCES `application-database`.`Application` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `application-database`.`Result`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `application-database`.`Result` (
-  `id` INT NOT NULL,
-  `result` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
 

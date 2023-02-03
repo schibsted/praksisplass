@@ -35,6 +35,10 @@
     color: #000000;
 }
 
+.info-file-link:hover {
+    cursor: pointer;
+}
+
 .info-file {
     display: flex;
     flex-direction: row;

@@ -1,0 +1,41 @@
+.title-subject {
+    font-size: 12px;
+    margin: 0;
+    color: #6B7280;
+}
+
+.subject-list {
+    padding-left: 12px;
+    font-size: 14px;
+    margin-top: 0;
+    border-top: 1px solid #E5E7EB;
+}
+
+.subject-list-item {
+    padding-top: 10px;
+
+} 
+
+input.checkboxSubject {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    position: relative;
+    bottom: 1px;
+    appearance: none;
+    -webkit-apperance: none;
+    border-radius: 4px;
+    border-style: solid;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 12px;
+}
+
+input.checkboxSubject:checked {
+    background-image: url(http://localhost:3000/gfx/check.svg);
+    background-color: black;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    background-size: 12px;
+}

@@ -1,5 +1,4 @@
-import React, { Component, useState } from "react";
-import { render } from "react-dom";
+import React from "react";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { schools, counties } from '../../../atoms';
 import './CheckboxSchools.css';
@@ -69,22 +68,26 @@ export default function CheckboxSchools() {
   return(
     <>
       <div>
-        <h3>Filter by County</h3>
-        <ul>
+        <ul className="school-list">
+        <h3 className="title-school">Skoler</h3>
           {checkboxesArray.map((checkbox) => {
             if (checkbox.type === 'county') {
               return (
-                <li key={checkbox.countyNumber} >
-              <input type="checkbox" checked={checkbox.checked} onChange={() => handleCheckboxChange(checkbox)} />
-              <label>{checkbox.countyName}</label>
+                <li key={checkbox.countyNumber}>
+                  <div className="school-list-county">
+                   <input type="checkbox" className="checkboxCounty" checked={checkbox.checked} onChange={() => handleCheckboxChange(checkbox)} />
+                   <label className="checkboxName">{checkbox.countyName}</label>
+                  </div>
             </li>
               )
             }
             else {
               return (
                 <li key={checkbox.schoolId} className="filter-school">
-                <input type="checkbox" checked={checkbox.checked} onChange={() => handleCheckboxChange(checkbox)} />
-                <label>{checkbox.schoolName}</label>
+                  <div className="school-list-school">
+                    <input type="checkbox" className="checkboxSchool" checked={checkbox.checked} onChange={() => handleCheckboxChange(checkbox)} />
+                    <label className="checkboxName">{checkbox.schoolName}</label>
+                  </div>
               </li>
               )
             }

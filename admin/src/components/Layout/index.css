@@ -6,6 +6,7 @@
         background-color: white;
         grid-template-areas: 
         "Nav ApplicationList Applicant";
+        background-color: #F3F4F6;
     }
 
     .Nav {

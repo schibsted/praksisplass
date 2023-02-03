@@ -91,10 +91,13 @@ export default function Navigation({applicants}) {
   
   return (
     <div className="nav">
-      <h3>search</h3>
-      <input type="text" placeholder="Search..." onChange={e => updateQuery(e.target.value)} />
-      <CheckboxSubjects />
-      <CheckboxSchools /> 
+      <div className='logo' />
+      <input type="text" placeholder="Søk i alle søknader" className='search' onChange={e => updateQuery(e.target.value)} />
+        <div className='nav-filter'>
+          <CheckboxSubjects />
+          <CheckboxSchools /> 
+        </div>
+      
     </div>
   )
 }

@@ -1,7 +1,7 @@
-import React, { Component, useState } from "react";
-import { render } from "react-dom";
+import React from "react";
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { subjects } from '../../../atoms';
+import './CheckboxSubjects.css';
 
 export default function CheckboxSubjects() {
     const subjectsState = useRecoilValue(subjects)
@@ -30,20 +30,17 @@ export default function CheckboxSubjects() {
     return(
         <>
           <div>
-            <h3>Filter by Subject</h3>
-            <ul>
+            <ul className="subject-list">
+              <h3 className="title-subject">Linjer</h3>
                 {checkboxesArray.map((subject) => {
                   return (
                     <li key={subject.subjectId}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          value={subject.subjectId}
-                          checked={subject.checked}
-                          onChange={() => handleCheckboxChange(subject.subjectId)}
-                        />
-                        {subject.subjectName}
-                      </label>
+                      <div className="subject-list-item">
+                        <label>
+                          <input type="checkbox" className="checkboxSubject" value={subject.subjectId} checked={subject.checked} onChange={() => handleCheckboxChange(subject.subjectId)}/>
+                          <label className="checkboxName">{subject.subjectName}</label>
+                        </label>
+                      </div>
                     </li>
                   )
                })}

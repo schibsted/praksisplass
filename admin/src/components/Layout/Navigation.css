@@ -1,9 +1,44 @@
 .nav {
-    background-color: #E5E7EB !important;
+    display: flex;
+    flex-direction: column;
+    background-color: #F5F5F5;
 }
 
 ul {
     list-style: none;
     padding: 10px;
     font-size: 15px;
+}
+
+.search {
+    margin: 12px;
+    padding: 12px;
+    border: none;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);
+    border-radius: 4px;
+}
+
+.search h3 {
+    padding: 0;
+    margin-left: 12px;
+}
+
+.nav-filter {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.nav-filter::-webkit-scrollbar {
+    width: 0px;
+}
+
+.logo {
+    background-image: url(http://localhost:3000/gfx/Logo.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    width: 150px;
+    height: 27px;
+    margin-top: 12px;
 }

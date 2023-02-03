@@ -19,52 +19,58 @@ export default function ApplicationList({ applicants }) {
     return data.filter(item=>item.firstname?.toLowerCase().includes(queryState.toLowerCase()))
   };
 
-  useEffect(() => {
-    const newFilteredApplicants = []
-    applicants.forEach(applicant => {
-       schoolsState.forEach(school => {
-         if (school.checked === true && school.schoolId === applicant.schoolOrgnr) {
-           newFilteredApplicants.push(applicant)
-         }
-       })
-     })
+  const filter = () => {
+    
+  }
 
-      newFilteredApplicants.forEach(applicant => {
-        subjectsState.forEach(subject => {
-          if (subject.checked === false && subject.subjectId === applicant.subjectId) {
-            var index = newFilteredApplicants.indexOf(applicant);
-            if (index !== -1) {
-              newFilteredApplicants.splice(index, 1);
-}
+  useEffect(() => {
+    updateFilteredApplicants(applicants)
+
+    updateFilteredApplicants(state => {
+      return state.filter(applicant => {
+        let schoolMatch = false
+        schoolsState.forEach(school => {
+          if (school.checked === true && school.schoolId === applicant.schoolOrgnr) {
+            schoolMatch = true
           }
         })
+        
+        return schoolMatch
       })
+    })
 
-     updateFilteredApplicants(newFilteredApplicants)
- }, [schoolsState, subjectsState])
+    updateFilteredApplicants(state => {
+      return state.filter(applicant => {
+        let subjectMatch = false
+        subjectsState.forEach(subject => {
+          if (subject.checked === true && subject.subjectId === applicant.subjectId) {
+            subjectMatch = true
+          }
+        })
+        
+        return subjectMatch
+      })
+    })
+
+    
+ }, [applicants, schoolsState, subjectsState])
 
  
   return (
-    <>
-    <div classname="applicants">
-      <table>
-          <h2>Applicants</h2>
-          <tbody>
+    <div className='applicantList-container'>
+      <div className='title'>
+        <h3>Søkere</h3>
+      </div>
+      <ul className="applicants-list">
             {search(filteredApplicantsState).map(application => (
-              <tr key={application.id}>
-              <Link to={`/application/${application.id}`} style={{ color:'black' }}>
-                <div>
-              {application.firstname + ' ' + application.lastname}
-              </div>
-              <div>
-                {application.email}
-              </div>
-              </Link>
-            </tr>
-            ))}
-          </tbody>
-        </table>
+              <Link to={`/application/${application.id}`}>
+                <li className='applicants-list-item'>
+                  <p className='applicant-name'>{application.firstname + ' ' + application.lastname}</p>
+                  <p className='applicant-email'>{application.email}</p>
+                </li>
+                </Link>
+              ))}
+        </ul>
     </div>
-    </>
   );
 }

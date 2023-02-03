@@ -7,6 +7,13 @@ import '../../googleFonts.css'
 export default function Info() {
     const applicantState = useRecoilValue(applicant);
 
+    const openFile = async (fileKey) => {
+        const request = await fetch(`http://localhost:3100/get-file-url/${fileKey}`)
+        const url = await request.json()
+
+        window.open(url.url, '_blank');
+    }
+
     return (
         <div className="applicant-content-container">
             <div className="applicant-content-header">
@@ -41,7 +48,7 @@ export default function Info() {
                 <div className="info-files-list">
                     {applicantState.files?.map((file) => {
                         return (
-                            <a href={file.url} target="_blank" className="info-file-link">
+                            <div onClick={() => openFile(file.fileKey)} target="_blank" className="info-file-link">
                                 <div className="info-file">
                                     <div className="info-file-filename">
                                         <span className="material-icons info-file-icon" >attach_file</span>
@@ -52,7 +59,7 @@ export default function Info() {
                                         <span className="material-icons info-file-icon">open_in_new</span>
                                     </div>
                                 </div> 
-                            </a>
+                            </div>
                         )
                     })}
                 </div>

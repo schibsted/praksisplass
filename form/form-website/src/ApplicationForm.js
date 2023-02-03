@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './ApplicationForm.css'
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import InputLabel from '@mui/material/InputLabel';
+import FormHelperText from '@mui/material/FormHelperText';
+import Button from '@mui/material/Button';
 
 const ApplicationForm = ({props}) => {
-    const [firstname, setFirstname] = useState()
-    const [lastname, setLastname] = useState()
-    const [email, setEmail] = useState()
-    const [tel, setTel] = useState()
-    const [county, setCounty] = useState()
-    const [school, setSchool] = useState()
-    const [subject, setSubject] = useState()
-    const [position, setPosition] = useState()
-    const [files, setFiles] = useState()
+    const [firstname, setFirstname] = useState("")
+    const [lastname, setLastname] = useState("")
+    const [email, setEmail] = useState("")
+    const [tel, setTel] = useState("")
+    const [countyId, setCountyId] = useState("")
+    const [countyName, setCountyName] = useState("")
+    const [schoolId, setSchoolId] = useState("")
+    const [schoolName, setSchoolName] = useState("")
+    const [subject, setSubject] = useState("")
+    const [position, setPosition] = useState("")
+    const [files, setFiles] = useState([])
 
-    const [counties, setCounties] = useState()
-    const [schools, setSchools] = useState()
-    const [subjects, setSubjects] = useState()
-    const [positions, setPositions] = useState()
+    const [counties, setCounties] = useState([])
+    const [schools, setSchools] = useState([])
+    const [subjects, setSubjects] = useState([])
+    const [positions, setPositions] = useState([])
 
     const navigate = useNavigate()
 
@@ -63,13 +72,18 @@ const ApplicationForm = ({props}) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        console.log({firstame: firstname, lastname: lastname, email: email, tel: tel, countyId: countyId, countyName: countyName, schoolId: schoolId, schoolName: schoolName, subject: subject, position: position, files: files})
+
         const formData = new FormData()
 
         formData.append("firstname", firstname)
         formData.append("lastname", lastname)
         formData.append("email", email)
         formData.append("tel", tel)
-        formData.append("school", school)
+        formData.append("countyId", countyId)
+        formData.append("countyName", countyName)
+        formData.append("schoolId", schoolId)
+        formData.append("schoolName", schoolName)
         formData.append("subject", subject)
         formData.append("position", position)
         
@@ -78,6 +92,8 @@ const ApplicationForm = ({props}) => {
                 formData.append("files", files[i]);
             }
         }
+
+        console.log(formData)
 
         const fetchAPI = async (data) => {
             const request = await fetch(`http://localhost:3100/send-form`, {
@@ -105,80 +121,243 @@ const ApplicationForm = ({props}) => {
         setFiles(remainingFiles)
     }
 
+    const handleCountyChange = (event) => {
+        const county = counties.find(county => county.code === event.target.value)
+        if (county) {
+            setCountyName(county.name);
+            setCountyId(county.code); 
+        }
+        else {
+            setCountyName("")
+            setCountyId("")
+        }
+    };
+
+    const handleSchoolChange = (event) => {
+        const school = schools.find(school => school.Orgnr === event.target.value)
+        console.log(school, schools)
+        if (school) {
+            setSchoolName(school.Navn);
+            setSchoolId(school.Orgnr); 
+        }
+        else {
+            setSchoolName("")
+            setSchoolId("")
+        }
+    };
+
+    const handleSubjectChange = (event) => {
+        const subject = subjects.find(subject => subject.subject_id === event.target.value)
+        if (subject) {
+            setSubject(subject.subject_id);
+        }
+        else {
+            setSubject("")
+        }
+    }
+
+    const handlePositionChange = (event) => {
+        const position = positions.find(position => position.position_id === event.target.value)
+        if (position) {
+            setPosition(position.position_id); 
+        }
+        else {
+            setPosition("")
+        }
+    }
+
     return (
-        <div id='applicationForm'>
-            <h1>Søknad</h1>
-            <form action="#">
-                <label>Fornavn:</label>
-                <input type="text" placeholder="Fornavn" onChange={e => setFirstname(e.target.value)} />
-                <label>Etternavn:</label>
-                <input type="text" placeholder="Etternavn" onChange={e => setLastname(e.target.value)} />
-                <label>E-post:</label>
-                <input type="email" placeholder="E-post" onChange={e => setEmail(e.target.value)} />
-                <label>Telefonnummer:</label>
-                <input type="tel" placeholder="Tlf" onChange={e => setTel(e.target.value)} />
-                <label>Fylke:</label>
-                <select onChange={e => setCounty(e.target.options[e.target.selectedIndex].id)}>
-                    <option>Velg fylke</option>
+        <div className="background">
+            <div className="application-form-container">
+                <form action="#" className="application-form-form">
+                    <div className="application-form-inputs">
+                            <TextField required className="application-form-input" label="Fornavn" variant="outlined" size="small" onChange={e => setFirstname(e.target.value)} />
+                            <TextField required className="application-form-input" label="Etternavn" variant="outlined" size="small" onChange={e => setLastname(e.target.value)} />
+                            <TextField required className="application-form-input" label="E-post" variant="outlined" size="small" onChange={e => setEmail(e.target.value)} />
+                            <TextField required className="application-form-input" label="Telefonnummer" variant="outlined" size="small" onChange={e => setTel(e.target.value)} />
 
-                    {counties?.map(county => {
-                        if (county.name == 'Uoppgitt') return
-                        return <option key={county.code} id={county.code}>{county.name}</option>
-                    })}
-                </select>
+                            <FormControl required className="application-form-input" size="small">
+                                <InputLabel id="demo-simple-select-required-label">Fylke</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value={countyId}
+                                    defaultValue=""
+                                    label="Fylke *"
+                                    onChange={handleCountyChange}
+                                >
+                                    <MenuItem value="">
+                                        <em>Ingen</em>
+                                    </MenuItem>
+                                    {counties?.map(county => {
+                                        if (county.name == 'Uoppgitt') return
+                                        return <MenuItem key={county.code} value={county.code}>{county.name}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
 
-                {county && (
-                    <>
-                        <label>Skole:</label>
-                        <select onChange={e => setSchool(e.target.options[e.target.selectedIndex].id)}>
-                            <option>Velg skole</option>
+                            <FormControl required className="application-form-input" size="small">
+                                <InputLabel id="demo-simple-select-required-label">Skole</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value={schoolId}
+                                    defaultValue=""
+                                    label="Skole *"
+                                    onChange={handleSchoolChange}
+                                >
+                                    <MenuItem value="">
+                                        <em>Ingen</em>
+                                    </MenuItem>
 
-                            {schools?.filter(school => school.Fylkesnr === county).map( school => (
-                                <option key={school.Orgnr} id={school.Orgnr}>{school.Navn}</option>
-                            ))}
-                        </select>
-                    </>
-                )}
-                
-                <label>Fagområde:</label>
-                <select onChange={e => setSubject(e.target.options[e.target.selectedIndex].id)}>
-                    <option>Velg fagområde</option>
+                                    {schools?.filter(school => school.Fylkesnr === countyId).map( school => (
+                                        <MenuItem key={school.Orgnr} value={school.Orgnr}>{school.Navn}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
 
-                    {subjects?.map(subject => {
-                        return <option key={subject.id} id={subject.id}>{subject.subjectName}</option>
-                    })}
-                </select>
+                            <FormControl required className="application-form-input" size="small">
+                                <InputLabel id="demo-simple-select-required-label" label="Fagområde">Fagområde</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value={subject}
+                                    defaultValue=""
+                                    label="Fagområde *"
+                                    onChange={handleSubjectChange}
+                                >
+                                    <MenuItem value="">
+                                        <em>Ingen</em>
+                                    </MenuItem>
 
-                <label>Stilling:</label>
-                <select onChange={e => setPosition(e.target.options[e.target.selectedIndex].id)}>
-                    <option>Velg stilling</option>
-                    {positions?.map(position => {
-                        return <option key={position.id} id={position.id}>{position.positionType}</option>
-                    })}
-                </select>
+                                    {subjects?.map(subject => {
+                                        return <MenuItem key={subject.subject_id} value={subject.subject_id}>{subject.subjectName}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
 
-                <label>CV og søknad:</label>
-                <label className="input-file">
-                    <span class="material-symbols-outlined">
-                        upload_file
-                    </span>
-                    Velg fil(pdf)
-                    <input type="file"  multiple accept="application/pdf" files={files} onChange={e => setFiles(Array.from(e.target.files))} />
-                </label>
+                            <FormControl required className="application-form-input" size="small">
+                                <InputLabel id="demo-simple-select-required-label">Stilling</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-required-label"
+                                    id="demo-simple-select-required"
+                                    value={position}
+                                    defaultValue=""
+                                    label="Stilling *"
+                                    onChange={handlePositionChange}
+                                >
+                                    <MenuItem value="">
+                                        <em>Ingen</em>
+                                    </MenuItem>
 
-                {files?.length > 0 && (
-                    <div className="file-list">
-                        {files.map(file => (
-                            <div className="show-selected-files" key={file.name}>
-                                <span className="file-name">{file.name}</span>
-                                <button className="remove-file" key={file.name} onClick={e => removeFile(files.indexOf(file))}>X</button>
-                            </div>
-                        ))}
+                                    {positions?.map(position => {
+                                        return <MenuItem key={position.position_id} value={position.position_id}>{position.positionType}</MenuItem>
+                                    })}
+                                </Select>
+                            </FormControl>
+
+                            <FormControl required className="application-form-input" size="small">
+                                <Button
+                                variant="contained"
+                                component="label"
+                                >
+                                Upload File
+                                <input
+                                    type="file"
+                                    hidden
+                                    multiple
+                                    accept="application/pdf"
+                                    onChange={e => setFiles(Array.from(e.target.files))}
+                                />
+                                </Button>
+                            </FormControl>
                     </div>
-                )}
+                    
+                    <div className="application-form-submit">
+                        <FormControl required className="application-form-input" size="small">
+                            <Button
+                            variant="contained"
+                            component="label"
+                            >
+                            Send søknad
+                            <input
+                                type="submit"
+                                hidden
+                                onClick={e => handleSubmit(e)}
+                            />
+                            </Button>
+                        </FormControl>
+                    </div>
+                    
+                    {/* <label>Fylke:</label>
+                    <select onChange={e => {
+                        setCountyId(e.target.options[e.target.selectedIndex].id)
+                        setCountyName(e.target.options[e.target.selectedIndex].value)
+                    }}>
+                        <option>Velg fylke</option>
 
-                <input type="submit" onClick={e => handleSubmit(e)} />
-            </form>
+                        {counties?.map(county => {
+                            if (county.name == 'Uoppgitt') return
+                            return <option key={county.code} id={county.code}>{county.name}</option>
+                        })}
+                    </select>
+
+                    {countyId && (
+                        <>
+                            <label>Skole:</label>
+                            <select onChange={e => {
+                                setSchoolId(e.target.options[e.target.selectedIndex].id)
+                                setSchoolName(e.target.options[e.target.selectedIndex].value)
+                            }}>
+                                <option>Velg skole</option>
+
+                                {schools?.filter(school => school.Fylkesnr === countyId).map( school => (
+                                    <option key={school.Orgnr} id={school.Orgnr}>{school.Navn}</option>
+                                ))}
+                            </select>
+                        </>
+                    )}
+                    
+                    <label>Fagområde:</label>
+                    <select onChange={e => setSubject(e.target.options[e.target.selectedIndex].id)}>
+                        <option>Velg fagområde</option>
+
+                        {subjects?.map(subject => {
+                            return <option key={subject.subject_id} id={subject.subject_id}>{subject.subjectName}</option>
+                        })}
+                    </select>
+
+                    <label>Stilling:</label>
+                    <select onChange={e => setPosition(e.target.options[e.target.selectedIndex].id)}>
+                        <option>Velg stilling</option>
+                        {positions?.map(position => {
+                            return <option key={position.position_id} id={position.position_id}>{position.positionType}</option>
+                        })}
+                    </select> */}
+
+                    {/* <label>CV og søknad:</label>
+                    <label className="input-file">
+                        <span class="material-symbols-outlined">
+                            upload_file
+                        </span>
+                        Velg fil
+                        <input type="file"  multiple accept="application/pdf" files={files} onChange={e => setFiles(Array.from(e.target.files))} />
+                    </label>
+
+                    {files?.length > 0 && (
+                        <div className="file-list">
+                            {files.map(file => (
+                                <div className="show-selected-files" key={file.name}>
+                                    <p className="file-name">{file.name}</p>
+                                    <button className="remove-file" key={file.name} onClick={e => removeFile(files.indexOf(file))}>X</button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    <input type="submit" onClick={e => handleSubmit(e)} /> */}
+                </form>
+            </div>
         </div>
     )
    

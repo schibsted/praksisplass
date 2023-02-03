@@ -1,39 +1,48 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-#applicationForm{
+.background {
     display: flex;
     flex-direction: column;
-    margin-bottom: 100px;
-}
-
-form {
-    display: flex;
-    flex-direction: column;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-h1 {
-    text-align: center;
-    font-weight: 500;
-}
-
-label {
-    font-weight: 500;
-}
-
-input:not([type=submit], [type=file]), select, textarea, .input-file {
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
     width: 100%;
-    height: 50px;
-    padding: 12px;
-    border: 1px solid #ccc;
+    justify-content: center;
+    background-color: #F3F4F6;
+ }
+
+.application-form-container{
+    display: flex;
+    flex-direction: column;
+    width: 624px;
     border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 6px;
-    margin-bottom: 16px;
-    resize: vertical;
+    background-color: #ffffff;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.application-form-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.application-form-inputs {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: stretch;
+    padding: 24px;
+    gap: 18px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.application-form-input {
+    flex-basis: 40%;
+    flex-grow: 1;
+}
+
+.application-form-submit {
+    display: flex;
+    justify-content: end;
+    padding: 24px;
 }
 
 input[type='file'] {
@@ -46,6 +55,10 @@ input[type='file'] {
 .input-file {
     display: flex;
     align-items: center;
+}
+
+.input-file:hover {
+    cursor: pointer;
 }
 
 
@@ -67,6 +80,12 @@ input[type=submit]:hover {
     border: 1px solid #ccc;
     justify-content: space-between;
     margin-bottom: 10px;
-    padding: 3px;
+    padding: 5px;
     border-radius: 4px;
+}
+
+.show-selected-files p {
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
 }

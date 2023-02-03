@@ -65,6 +65,8 @@ app.get('/api/applications', (req, res) => {
 app.get('/api/applications/:id', async (req, res) => {
     const applicant = await getApplicant(req.params.id)
     const files = await getFIles(req.params.id)
+
+    console.log({...applicant[0], ...files})
     
     res.send({...applicant[0], ...files})
 })
@@ -96,6 +98,8 @@ const getFIles = async (id) => {
         });
     });
 
+    return {files: files}
+
     const filesArray = []
     for (let i = 0; i < files.length; i++) {
         const url = await getFIleUrl(files[i].fileKey)
@@ -106,6 +110,11 @@ const getFIles = async (id) => {
         files: filesArray,
     }
 }
+
+app.get('/get-file-url/:fileKey', async (req, res) => {
+    const url = await getFIleUrl(req.params.fileKey)
+    res.send(url)
+})
 
 app.get('/api/schools', (req, res) => {
     con.connect(function(err) {
@@ -173,19 +182,19 @@ app.get('/get-school-and-study',  (req, res) => {
     })
 })
 
-app.get('/get-file-url', async (req, res) =>{
-    const applicationId = req.query.applicationid
+// app.get('/get-file-url', async (req, res) =>{
+//     const applicationId = req.query.applicationid
     
-    database("SELECT fileKey FROM File WHERE Application_id=?", [applicationId], async function(result){
-        const urls = []
-        for (let i = 0; i < result.length; i++) {
-            const url = await getFIleUrl(result[i].fileKey)
-            urls.push(url)
-        }
+//     database("SELECT fileKey FROM File WHERE Application_id=?", [applicationId], async function(result){
+//         const urls = []
+//         for (let i = 0; i < result.length; i++) {
+//             const url = await getFIleUrl(result[i].fileKey)
+//             urls.push(url)
+//         }
     
-        res.send((urls))
-     });
-})
+//         res.send((urls))
+//      });
+// })
 
 const getFIleUrl = async (key) => {
     const client = new S3Client({
@@ -240,7 +249,8 @@ const database = (sql, values, callback) => {
 
 
 // uploads data filled out in in the form -------------------------------------------------------------------------------------
-app.post('/send-form', upload.array('files'), (req, res) => {
+app.post('/send-form', upload.array('files'), async (req, res) => {
+    console.log(req.body)
     uploadToDatabase(req.body, req.files)
 
     let resultHandler = function (err) {
@@ -264,16 +274,34 @@ app.post('/send-form', upload.array('files'), (req, res) => {
 // sends data to the database
 const uploadToDatabase = async (data, files) => {
     con.connect(function(err) {
-        // var sql = "INSERT INTO Application (firstname, lastname, email, tel, School_id, Study_id) VALUES (?, ?, ?, ?, (SELECT id FROM School WHERE name=?), )";
-        var sql = "INSERT INTO Application (firstname, lastname, email, tel, schoolOrgnr, subjectId, positionId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        var sql = "INSERT IGNORE INTO County (countyNumber, name) VALUES (?, ?)";
+        var values = [data.countyId, data.countyName]
+        console.log(values)
 
-        var values = [data.firstname, data.lastname, data.email, data.tel, data.school, data.subject, data.position]
+        con.query(sql, values, function (err, result) {
+            if (err) throw err;
+            console.log(result)
+        });
+
+
+        var sql = "INSERT IGNORE INTO School (orgnr, schoolName, countyNumber) VALUES (?, ?, ?)";
+        var values = [data.schoolId, data.schoolName, data.countyId]
+
         con.query(sql, values, function (err, result) {
             if (err) throw err;
         });
+
+        
+        var sql = "INSERT INTO Application (firstname, lastname, email, tel, schoolOrgnr, subjectId, positionId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        var values = [data.firstname, data.lastname, data.email, data.tel, data.schoolId, data.subject, data.position]
+
+        con.query(sql, values, function (err, result) {
+            if (err) throw err;
+        });
+
         
         var sql = "INSERT INTO File (filename, fileKey, Application_id) VALUES (?, (SELECT (id) FROM Application WHERE id=(SELECT max(id) FROM Application)))"
-        
+
         files.forEach(file => {
             var values = [file.originalname, withFileExtension(file.filename, file.mimetype)]
 
